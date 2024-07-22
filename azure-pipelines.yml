@@ -1,7 +1,7 @@
 trigger: none  # Disable CI triggers
 
 schedules:
-- cron: "*/5 * * * *"  # Run every 5 minutes
+- cron: "* * * * *"  # Run every 5 minutes
   displayName: Every 5 minutes
   branches:
     include:
