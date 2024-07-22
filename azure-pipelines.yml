@@ -28,7 +28,7 @@ parameters:
      default: 'subtf'
 
 stages:
-  - stage: terraform resources
+  - stage: terraform 
     displayName: plan the resources
     jobs:
       - job:
