@@ -1,4 +1,3 @@
-
 # Starter pipeline
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
@@ -13,19 +12,12 @@ parameters:
 # Name of the resource group
   - name:  rgname 
     type:  string
-    default:  'rgtf'
-# Name of the resource group
-  - name: location 
+    default:  'class'
+# Name of the machine
+  - name: vmname 
     type: string
-    default:  'East US'
-# Name of virtual network
-  - name: tfvnet
-    type: string
-    default: 'pipenet'
-# Name of subnet
-  -  name: subnet 
-     type: string
-     default: 'subtf'
+    default:  'slaveans'
+
 
 stages:
   - stage: terraform 
@@ -33,25 +25,9 @@ stages:
     jobs:
       - job:
         steps:
-         - task: TerraformTaskV4@4
-           displayName: terraform init
+         - task: AzureCLI@2
            inputs:
-              provider: 'azurerm'
-              command: 'init'
-         - task: TerraformTaskV4@4
-           displayName:  Validate
-           inputs:
-            provider: 'azurerm'
-            command: 'validate'
-         - task: TerraformTaskV4@4
-           displayName: terraform plan
-           inputs:
-                provider: 'azurerm'
-                command: 'plan'
-                environmentServiceNameAzureRM: 'azuresp'
-         - task: TerraformTaskV4@4
-           displayName: terraform apply
-           inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              environmentServiceNameAzureRM: 'azuresp'
+              azureSubscription: 'azuresp'
+              scriptType: 'pscore'
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az vm start --resource-group ${{parameters.rgname}} --name ${{parameters.vmname}}'
