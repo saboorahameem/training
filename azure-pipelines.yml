@@ -1,0 +1,57 @@
+
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:  none  
+
+pool:
+  vmImage: ubuntu-latest
+
+parameters:
+# Name of the resource group
+  - name:  rgname 
+    type:  string
+    default:  'rgtf'
+# Name of the resource group
+  - name: location 
+    type: string
+    default:  'East US'
+# Name of virtual network
+  - name: tfvnet
+    type: string
+    default: 'pipenet'
+# Name of subnet
+  -  name: subnet 
+     type: string
+     default: 'subtf'
+
+stages:
+  - stage: terraform resources
+    displayName: Plan the resources
+    jobs:
+      - job:
+        steps:
+         - task: TerraformTaskV4@4
+           displayName: terraform init
+           inputs:
+              provider: 'azurerm'
+              command: 'init'
+         - task: TerraformTaskV4@4
+           displayName:  Validate
+           iinputs:
+            provider: 'azurerm'
+            command: 'validate'
+         - task: TerraformTaskV4@4
+           displayName: terraform plan
+           inputs:
+                provider: 'azurerm'
+                command: 'plan'
+                environmentServiceNameAzureRM: 'azuresp'
+         - task: TerraformTaskV4@4
+           displayName: terraform apply
+           inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              environmentServiceNameAzureRM: 'azuresp'
